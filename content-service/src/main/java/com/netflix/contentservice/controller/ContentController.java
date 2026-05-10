@@ -3,7 +3,6 @@ package com.netflix.contentservice.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +16,6 @@ import com.netflix.contentservice.dto.MovieRequest;
 import com.netflix.contentservice.dto.MovieResponse;
 import com.netflix.contentservice.model.Genre;
 import com.netflix.contentservice.service.ContentService;
-import com.netflix.contentservice.service.MovieService;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -27,34 +25,34 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ContentController {
 
-    private final MovieService movieService;
+    private final ContentService contentService;
 
     @PostMapping
     public ResponseEntity<MovieResponse> addMovie(@Valid @RequestBody MovieRequest movieRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(movieService.addMovie(movieRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(contentService.addMovie(movieRequest));
     }
 
     // get all movies
     @GetMapping
     public ResponseEntity<List<MovieResponse>> getAllMovies() {
-        return ResponseEntity.ok(movieService.getAllMovies());
+        return ResponseEntity.ok(contentService.getAllMovies());
     }
 
     // get movies by genre
     @GetMapping("/genre/{genre}")
     public ResponseEntity<List<MovieResponse>> getMovieByGenre(@PathVariable Genre genre) {
-        return ResponseEntity.ok(movieService.getMoviesByGenre(genre));
+        return ResponseEntity.ok(contentService.getMoviesByGenre(genre));
     }
 
     // get movies by id
     @GetMapping("/{movieId}")
     public ResponseEntity<MovieResponse> getMovieById(@PathVariable String movieId) {
-        return ResponseEntity.ok(movieService.getMoviesById(movieId));
+        return ResponseEntity.ok(contentService.getMoviesById(movieId));
     }
 
     // search movie
     @GetMapping("/search")
     public ResponseEntity<List<MovieResponse>> searchMovies(@RequestParam String title) {
-        return ResponseEntity.ok(movieService.searchMovies(title));
+        return ResponseEntity.ok(contentService.searchMovies(title));
     }
 }

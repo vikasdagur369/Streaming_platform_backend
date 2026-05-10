@@ -1,7 +1,6 @@
 package com.netflix.contentservice.service;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class MovieService {
+public class ContentService {
 
     private final MovieRepository movieRepository;
 
@@ -76,11 +75,33 @@ public class MovieService {
     }
 
     // search movie by title
-
     public List<MovieResponse> searchMovies(String title) {
-        return movieRepository.fin
+        return movieRepository.findByTitleContaingIgnoreCase(title).stream().map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
+    // this method will be called by video-service to update s3 keys
+    public void updateVideoKey(String movieId, String videoKey) {
+        log.info("updating video key for movie", movieId);
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new RuntimeException("Movie not found" + movieId));
+
+        movie.setVideoKey(videoKey);
+        movie.setVideoStatus(VideoStatus.UPLOADED);
+
+        movieRepository.save(movie);
+    }
+
+    // encoder-service will call this funciton
+    public void updateHlsUrl(String movieId, String hlsUrl){
+        log.info("updating hlsUrl for movie",movieId);
+        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new RuntimeException("Movie not found"+movieId));
+
+        movie.setHlsUrl(hlsUrl);
+        movie.setVideoStatus(VideoStatus.READY);
+        movieRepository.save(movie);
+        log.info("movie is ready for streaming",movieId);
+    }
     // Helper function
     private MovieResponse mapToResponse(Movie movie) {
         MovieResponse response = new MovieResponse();
