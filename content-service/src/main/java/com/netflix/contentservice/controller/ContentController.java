@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/v1/movies")
 @Slf4j
+
 public class ContentController {
 
     private final ContentService contentService;
