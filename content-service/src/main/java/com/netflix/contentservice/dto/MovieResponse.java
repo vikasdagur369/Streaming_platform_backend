@@ -1,5 +1,7 @@
 package com.netflix.contentservice.dto;
 
+import java.time.LocalDateTime;
+
 import com.netflix.contentservice.model.Genre;
 import com.netflix.contentservice.model.VideoStatus;
 
@@ -24,6 +26,6 @@ public class MovieResponse {
     private String videoKey;
     private String hlsUrl;
     private VideoStatus videoStatus;
-
+    private LocalDateTime createdAt;
 
 }
