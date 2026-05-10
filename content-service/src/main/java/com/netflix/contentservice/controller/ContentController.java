@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.netflix.contentservice.dto.MovieRequest;
@@ -24,22 +25,35 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/movies")
 @Slf4j
 public class ContentController {
-    
+
     private final ContentService contentService;
 
     @PostMapping
-    public ResponseEntity<MovieResponse> addMovie(@Valid @RequestBody MovieRequest movieRequest){
+    public ResponseEntity<MovieResponse> addMovie(@Valid @RequestBody MovieRequest movieRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(contentService.addMovie(movieRequest));
     }
 
     // get all movies
     @GetMapping
-    public ResponseEntity<List<MovieResponse>> getAllMovies(){
+    public ResponseEntity<List<MovieResponse>> getAllMovies() {
         return ResponseEntity.ok(contentService.getAllMovies());
     }
 
     // get movies by genre
-    public ResponseEntity<List<MovieResponse>> getMovieByGenre(@PathVariable Genre genre){
-         return ResponseEntity.ok(contentService.getMoviesByGenre(genre));
+    @GetMapping("/genre/{genre}")
+    public ResponseEntity<List<MovieResponse>> getMovieByGenre(@PathVariable Genre genre) {
+        return ResponseEntity.ok(contentService.getMoviesByGenre(genre));
+    }
+
+    // get movies by id
+    @GetMapping("/{movieId}")
+    public ResponseEntity<MovieResponse> getMovieById(@PathVariable String movieId) {
+        return ResponseEntity.ok(contentService.getMoviesById(movieId));
+    }
+
+    // search movie
+    @GetMapping("/search")
+    public ResponseEntity<List<MovieResponse>> searchMovies(@RequestParam String title){
+        return ResponseEntity.ok(contentService.searchMovies(title));
     }
 }
