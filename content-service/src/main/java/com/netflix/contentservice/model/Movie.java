@@ -45,7 +45,7 @@ public class Movie {
     private String thumbnailUrl;
     private int durationMinutes;
 
-     private String videoKey;
+    private String videoKey;
 
     // HLS master playlist URL for streaming
     private String hlsUrl;

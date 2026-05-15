@@ -18,16 +18,18 @@ import com.netflix.contentservice.model.Genre;
 import com.netflix.contentservice.service.ContentService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/movies")
 @Slf4j
-
+@RequiredArgsConstructor
 public class ContentController {
 
     private final ContentService contentService;
 
+    // add a movie
     @PostMapping
     public ResponseEntity<MovieResponse> addMovie(@Valid @RequestBody MovieRequest movieRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(contentService.addMovie(movieRequest));
